@@ -34,6 +34,7 @@ BANNER
         tracefile = @argv.shift
         converter = Converter.new(tracefile)
         payload = converter.convert
+        puts payload.to_json if @verbose
         unless @dry_run
           Coveralls::API.post_json("jobs", payload)
         end
