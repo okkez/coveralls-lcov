@@ -7,6 +7,7 @@ module Coveralls
       def initialize(argv)
         @argv = argv
         @verbose = false
+        @dry_run = false
         @parser = OptionParser.new(@argv)
         @parser.banner = <<BANNER
   Usage: coveralls [options] coverage.info
@@ -16,6 +17,9 @@ module Coveralls
 BANNER
         @parser.on("-v", "--verbose", "Print payload") do
           @verbose = true
+        end
+        @parser.on("-n", "--dry-run", "Dry run") do
+          @dry_run = true
         end
       end
 
@@ -29,7 +33,9 @@ BANNER
         tracefile = @argv.shift
         converter = Converter.new(tracefile)
         payload = converter.convert
-        Coveralls::API.post_json("jobs", payload)
+        unless @dry_run
+          Coveralls::API.post_json("jobs", payload)
+        end
       end
     end
   end
