@@ -1,3 +1,5 @@
 #! /usr/bin/env ruby
 
+require "coveralls/lcov/runner"
+
 Coveralls::Lcov::Runner.new(ARGV).run
