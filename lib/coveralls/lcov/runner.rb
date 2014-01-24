@@ -8,6 +8,12 @@ module Coveralls
         @argv = argv
         @verbose = false
         @parser = OptionParser.new(@argv)
+        @parser.banner = <<BANNER
+  Usage: coveralls [options] coverage.info
+
+  e.g. coveralls -v coverage.info
+
+BANNER
         @parser.on("-v", "--verbose", "Print payload") do
           @verbose = true
         end
