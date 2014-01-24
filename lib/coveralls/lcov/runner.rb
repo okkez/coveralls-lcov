@@ -1,5 +1,6 @@
 require "optparse"
 require "coveralls"
+require "coveralls/lcov/converter"
 
 module Coveralls
   module Lcov
