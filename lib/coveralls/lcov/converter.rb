@@ -57,7 +57,7 @@ module Coveralls
       def git_info
         {
           head: {
-            id: `git log --format=%H`,
+            id: `git log -1 --format=%H`,
             committer_email: `git log -1 --format=%ce`,
             committer_name: `git log -1 --format=%cN`,
             author_email: `git log -1 --format=%ae`,
