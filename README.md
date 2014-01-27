@@ -25,7 +25,7 @@ In .travis.yml
 ```
 install:
   - sudo apt-get install -y lcov
-  - sudo gem install coveralls-lcov
+  - gem install coveralls-lcov
 before_script:
   - ./autogen.sh
   - ./configure --enable-coverage
