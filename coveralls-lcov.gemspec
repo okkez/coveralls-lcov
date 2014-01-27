@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["okimoto@clear-code.com"]
   spec.summary       = %q{Post coverage information to coveralls.io}
   spec.description   = %q{Post coverage information to coveralls.io}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/okkez/coveralls-lcov"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
