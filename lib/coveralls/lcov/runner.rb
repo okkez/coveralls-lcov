@@ -7,6 +7,7 @@ module Coveralls
     class Runner
       def initialize(argv)
         @argv = argv
+        @repo_token = nil
         @verbose = false
         @dry_run = false
         @parser = OptionParser.new(@argv)
@@ -16,6 +17,9 @@ module Coveralls
   e.g. coveralls-lcov -v coverage.info
 
 BANNER
+        @parser.on("-t", "--repo-token=TOKEN", "Repository token") do |token|
+          @repo_token = token
+        end
         @parser.on("-v", "--verbose", "Print payload") do
           @verbose = true
         end
@@ -34,6 +38,7 @@ BANNER
         tracefile = @argv.shift
         converter = Converter.new(tracefile)
         payload = converter.convert
+        payload[:repo_token] = @repo_token if @repo_token
         puts payload.to_json if @verbose
         unless @dry_run
           Coveralls::API.post_json("jobs", payload)
