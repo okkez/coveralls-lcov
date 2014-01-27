@@ -11,9 +11,9 @@ module Coveralls
         @dry_run = false
         @parser = OptionParser.new(@argv)
         @parser.banner = <<BANNER
-  Usage: coveralls [options] coverage.info
+  Usage: coveralls-lcov [options] coverage.info
 
-  e.g. coveralls -v coverage.info
+  e.g. coveralls-lcov -v coverage.info
 
 BANNER
         @parser.on("-v", "--verbose", "Print payload") do
