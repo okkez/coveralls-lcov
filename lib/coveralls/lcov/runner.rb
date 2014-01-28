@@ -13,6 +13,8 @@ module Coveralls
       def initialize(argv)
         @argv = argv
         @repo_token = nil
+        @n_times = 3
+        @delay = 3
         @verbose = false
         @dry_run = false
         @parser = OptionParser.new(@argv)
@@ -24,6 +26,12 @@ module Coveralls
 BANNER
         @parser.on("-t", "--repo-token=TOKEN", "Repository token") do |token|
           @repo_token = token
+        end
+        @parser.on("--retry=N", Integer, "Retry to POST N times (default: 3)") do |n_times|
+          @n_times = n_times
+        end
+        @parser.on("--delay=N", Integer, "Delay in N secs when retry (default: 3)") do |delay|
+          @delay = delay
         end
         @parser.on("-v", "--verbose", "Print payload") do
           @verbose = true
@@ -47,12 +55,17 @@ BANNER
         payload_json = payload.to_json
         puts payload_json if @verbose
         unless @dry_run
-          post(payload_json)
+          @n_times.times do
+            response = post(payload_json)
+            break if response.is_a?(Net::HTTPSuccess)
+            sleep @delay
+          end
         end
       end
 
       def post(payload)
         Net::HTTP.version_1_2
+        response = nil
 
         http = Net::HTTP.new(HOST, 443)
         http.use_ssl = true
@@ -71,6 +84,8 @@ BODY
           p response
           puts response.body
         end
+
+        response
       end
     end
   end
