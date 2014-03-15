@@ -1,6 +1,7 @@
 require "optparse"
 require "json"
 require "net/http"
+require "net/https"
 require "coveralls/lcov/converter"
 
 module Coveralls
