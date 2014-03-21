@@ -2,8 +2,9 @@
 module Coveralls
   module Lcov
     class Converter
-      def initialize(tracefile)
+      def initialize(tracefile, source_encoding = Encoding::UTF_8)
         @tracefile = tracefile
+        @source_encoding = source_encoding
       end
 
       def convert
@@ -40,7 +41,7 @@ module Coveralls
       end
 
       def generate_source_file(filename, info)
-        source = File.read(filename)
+        source = File.open(filename, "r:#{@source_encoding}"){|file| file.read }.encode("UTF-8")
         lines = source.lines
         coverage = Array.new(lines.to_a.size)
         source.lines.each_with_index do |line, index|

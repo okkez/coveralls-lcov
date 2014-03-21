@@ -16,6 +16,7 @@ module Coveralls
         @repo_token = nil
         @n_times = 3
         @delay = 3
+        @source_encoding = Encoding::UTF_8
         @verbose = false
         @dry_run = false
         @parser = OptionParser.new(@argv)
@@ -34,6 +35,10 @@ BANNER
         @parser.on("--delay=N", Integer, "Delay in N secs when retry (default: 3)") do |delay|
           @delay = delay
         end
+        @parser.on("--source-encoding=ENCODING",
+                   "Source files encoding  (default: UTF-8)") do |encoding|
+          @source_encoding = Encoding.find(encoding)
+        end
         @parser.on("-v", "--verbose", "Print payload") do
           @verbose = true
         end
@@ -50,7 +55,7 @@ BANNER
           exit false
         end
         tracefile = @argv.shift
-        converter = Converter.new(tracefile)
+        converter = Converter.new(tracefile, @source_encoding)
         payload = converter.convert
         payload[:repo_token] = @repo_token if @repo_token
         payload_json = payload.to_json
