@@ -63,10 +63,11 @@ BANNER
         unless @dry_run
           @n_times.times do
             response = post(payload_json)
-            break if response.is_a?(Net::HTTPSuccess)
+            return true if response.is_a?(Net::HTTPSuccess)
             sleep @delay
           end
         end
+        false
       end
 
       def post(payload)
