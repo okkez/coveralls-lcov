@@ -22,6 +22,8 @@ Or install it yourself as:
 
 In .travis.yml
 
+Do not use `sudo` when install Gem because `sudo` doesn't refer PATH changed by RVM.
+
 ```
 install:
   - sudo apt-get install -y lcov
