@@ -38,6 +38,10 @@ module Coveralls
           end
         end
         lcov_info
+      rescue => ex
+        warn "Could not read tracefile: #{@tracefile}"
+        warn "#{ex.class}: #{ex.message}"
+        exit(false)
       end
 
       def generate_source_file(filename, info)
