@@ -23,7 +23,7 @@ module Coveralls
       end
 
       def parse_tracefile
-        lcov_info = Hash.new{|h,k| h[k] = {} }
+        lcov_info = Hash.new {|h, k| h[k] = {} }
         source_file = nil
         File.readlines(@tracefile).each do |line|
           case line.chomp
@@ -45,10 +45,10 @@ module Coveralls
       end
 
       def generate_source_file(filename, info)
-        source = File.open(filename, "r:#{@source_encoding}"){|file| file.read }.encode("UTF-8")
+        source = File.open(filename, "r:#{@source_encoding}", &:read).encode("UTF-8")
         lines = source.lines
         coverage = Array.new(lines.to_a.size)
-        source.lines.each_with_index do |line, index|
+        source.lines.each_with_index do |_line, index|
           coverage[index] = info[index + 1]
         end
         top_src_dir = Dir.pwd
