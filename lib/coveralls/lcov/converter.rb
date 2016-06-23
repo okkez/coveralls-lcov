@@ -14,10 +14,10 @@ module Coveralls
           source_files << generate_source_file(filename, info)
         end
         payload = {
-          :service_name   => "travis-ci",
-          :service_job_id => ENV["TRAVIS_JOB_ID"],
-          :git            => git_info,
-          :source_files   => source_files,
+          service_name: "travis-ci",
+          service_job_id: ENV["TRAVIS_JOB_ID"],
+          git: git_info,
+          source_files: source_files,
         }
         payload
       end
@@ -49,24 +49,24 @@ module Coveralls
         end
         top_src_dir = Dir.pwd
         {
-          :name     => filename.sub(%r!#{top_src_dir}/!, ""),
-          :source   => source,
-          :coverage => coverage,
+          name: filename.sub(%r!#{top_src_dir}/!, ""),
+          source: source,
+          coverage: coverage,
         }
       end
 
       def git_info
         {
-          :head => {
-            :id              => `git log -1 --format=%H`,
-            :committer_email => `git log -1 --format=%ce`,
-            :committer_name  => `git log -1 --format=%cN`,
-            :author_email    => `git log -1 --format=%ae`,
-            :author_name     => `git log -1 --format=%aN`,
-            :message         => `git log -1 --format=%s`,
+          head: {
+            id: `git log -1 --format=%H`,
+            committer_email: `git log -1 --format=%ce`,
+            committer_name: `git log -1 --format=%cN`,
+            author_email: `git log -1 --format=%ae`,
+            author_name: `git log -1 --format=%aN`,
+            message: `git log -1 --format=%s`,
           },
-          :remotes => [], # FIXME need this?
-          :branch  => `git rev-parse --abbrev-ref HEAD`,
+          remotes: [], # FIXME need this?
+          branch: `git rev-parse --abbrev-ref HEAD`,
         }
       end
 
