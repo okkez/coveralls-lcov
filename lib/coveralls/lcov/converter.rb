@@ -69,7 +69,6 @@ module Coveralls
           branch: `git rev-parse --abbrev-ref HEAD`,
         }
       end
-
     end
   end
 end
