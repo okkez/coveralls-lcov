@@ -2,9 +2,10 @@
 module Coveralls
   module Lcov
     class Converter
-      def initialize(tracefile, source_encoding = Encoding::UTF_8)
+      def initialize(tracefile, source_encoding = Encoding::UTF_8, service_name = "travis-ci")
         @tracefile = tracefile
         @source_encoding = source_encoding
+        @service_name = service_name
       end
 
       def convert

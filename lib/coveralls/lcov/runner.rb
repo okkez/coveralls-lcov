@@ -59,7 +59,7 @@ BANNER
           exit false
         end
         tracefile = @argv.shift
-        converter = Converter.new(tracefile, @source_encoding)
+        converter = Converter.new(tracefile, @source_encoding, @service_name)
         payload = converter.convert
         payload[:repo_token] = @repo_token if @repo_token
         payload_json = payload.to_json
