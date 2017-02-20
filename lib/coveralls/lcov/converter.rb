@@ -14,7 +14,7 @@ module Coveralls
           source_files << generate_source_file(filename, info)
         end
         payload = {
-          service_name: "travis-ci",
+          service_name: @service_name,
           service_job_id: ENV["TRAVIS_JOB_ID"],
           git: git_info,
           source_files: source_files,
