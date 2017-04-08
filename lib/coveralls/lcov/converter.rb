@@ -2,10 +2,11 @@
 module Coveralls
   module Lcov
     class Converter
-      def initialize(tracefile, source_encoding = Encoding::UTF_8, service_name = "travis-ci")
+      def initialize(tracefile, source_encoding = Encoding::UTF_8, service_name = "travis-ci", service_job_id = nil)
         @tracefile = tracefile
         @source_encoding = source_encoding
         @service_name = service_name
+        @service_job_id = service_job_id
       end
 
       def convert
@@ -16,7 +17,7 @@ module Coveralls
         end
         payload = {
           service_name: @service_name,
-          service_job_id: ENV["TRAVIS_JOB_ID"],
+          service_job_id: service_job_id,
           git: git_info,
           source_files: source_files,
         }
@@ -73,6 +74,10 @@ module Coveralls
           remotes: [], # FIXME need this?
           branch: `git rev-parse --abbrev-ref HEAD`,
         }
+      end
+
+      def service_job_id
+        ENV["TRAVIS_JOB_ID"] || @service_job_id
       end
     end
   end

@@ -33,6 +33,9 @@ BANNER
         @parser.on("-s", "--service-name=SERVICENAME", "Service name") do |service_name|
           @service_name = service_name
         end
+        @parser.on("--service-job-id=JOB_ID", "Service job id. ex. TRAVIS_JOB_ID") do |service_job_id|
+          @service_job_id = service_job_id
+        end
         @parser.on("--retry=N", Integer, "Retry to POST N times (default: 3)") do |n_times|
           @n_times = n_times
         end
