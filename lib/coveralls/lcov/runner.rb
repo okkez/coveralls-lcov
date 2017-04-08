@@ -18,6 +18,7 @@ module Coveralls
         @delay = 3
         @source_encoding = Encoding::UTF_8
         @service_name = "travis-ci"
+        @service_job_id = nil
         @verbose = false
         @dry_run = false
         @parser = OptionParser.new(@argv)
@@ -62,7 +63,7 @@ BANNER
           exit false
         end
         tracefile = @argv.shift
-        converter = Converter.new(tracefile, @source_encoding, @service_name)
+        converter = Converter.new(tracefile, @source_encoding, @service_name, @service_job_id)
         payload = converter.convert
         payload[:repo_token] = @repo_token if @repo_token
         payload_json = payload.to_json
