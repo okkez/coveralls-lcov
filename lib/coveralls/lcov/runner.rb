@@ -66,11 +66,11 @@ BANNER
         tracefile = @argv.shift
         converter = Converter.new(tracefile, @source_encoding, @service_name, @service_job_id)
         payload = converter.convert
-        cfg = YAML.load_file(".coveralls.yml") if File.exist? ".coveralls.yml"
+        coveralls_config = YAML.load_file(".coveralls.yml") if File.exist? ".coveralls.yml"
         if @repo_token
           payload[:repo_token] = @repo_token
-        elsif cfg && cfg != nil && cfg["repo_token"] != nil
-          payload[:repo_token] = cfg["repo_token"]
+        elsif coveralls_config && coveralls_config != nil && coveralls_config["repo_token"] != nil
+          payload[:repo_token] = coveralls_config["repo_token"]
         end
         payload_json = payload.to_json
         puts payload_json if @verbose
