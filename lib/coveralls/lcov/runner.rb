@@ -1,5 +1,6 @@
 require "optparse"
 require "json"
+require "yaml"
 require "net/http"
 require "net/https"
 require "coveralls/lcov/converter"
@@ -65,7 +66,12 @@ BANNER
         tracefile = @argv.shift
         converter = Converter.new(tracefile, @source_encoding, @service_name, @service_job_id)
         payload = converter.convert
-        payload[:repo_token] = @repo_token if @repo_token
+        cfg = YAML.load_file('.coveralls.yml') if File.exist? '.coveralls.yml'
+        if @repo_token
+          payload[:repo_token] = @repo_token
+        elsif cfg && cfg != nil && cfg['repo_token'] != nil
+          payload[:repo_token] = cfg['repo_token']
+        end
         payload_json = payload.to_json
         puts payload_json if @verbose
         unless @dry_run
