@@ -25,7 +25,7 @@ module Coveralls
       end
 
       def parse_tracefile
-        lcov_info = Hash.new {|h, k| h[k] = {} }
+        lcov_info = Hash.new {|h, k| h[k] = {"coverage" => {}, "branches" => []} }
         source_file = nil
         File.readlines(@tracefile).each do |line|
           case line.chomp
@@ -34,7 +34,16 @@ module Coveralls
           when /\ADA:(\d+),(\d+)/
             line_no = $1.to_i
             count = $2.to_i
-            lcov_info[source_file][line_no] = count
+            lcov_info[source_file]["coverage"][line_no] = count
+          when /\ABRDA:(\d+),(\d+),(\d+),(\d+|-)/
+            line_no = $1.to_i
+            block_no = $2.to_i
+            branch_no = $3.to_i
+            hits = 0
+            unless $4 == "-"
+              hits = $4.to_i
+            end
+            lcov_info[source_file]['branches'].push(line_no, block_no, branch_no, hits)
           when /\Aend_of_record/
             source_file = nil
           end
@@ -51,14 +60,18 @@ module Coveralls
         lines = source.lines
         coverage = Array.new(lines.to_a.size)
         source.lines.each_with_index do |_line, index|
-          coverage[index] = info[index + 1]
+          coverage[index] = info["coverage"][index + 1]
         end
         top_src_dir = Dir.pwd
-        {
+        source_file = {
           name: filename.sub(%r!#{top_src_dir}/!, ""),
           source: source,
           coverage: coverage,
         }
+        unless info["branches"].empty?
+          source_file["branches"] = info["branches"]
+        end
+        source_file
       end
 
       def git_info
