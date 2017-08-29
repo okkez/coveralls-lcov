@@ -28,7 +28,7 @@ In .travis.yml
 
 Do not use `sudo` when install Gem because `sudo` doesn't refer PATH changed by RVM.
 
-```
+```yaml
 install:
   - sudo apt-get install -y lcov
   - gem install coveralls-lcov
@@ -60,6 +60,17 @@ and then execute
 $ coveralls-lcov coverage.info
 ```
 
+### C1 coverage support
+
+You can report C1 coverage using `--rc lcov_branch_coverage=1`.
+
+```yaml
+after_success:
+  - lcov --compat-libtool --directory . --capture --rc lcov_branch_coverage=1 --output-file coverage.info 
+  - coveralls-lcov coverage.info
+```
+
+See also lcovrc(5).
 
 ## Contributing
 
