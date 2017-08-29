@@ -25,7 +25,7 @@ module Coveralls
       end
 
       def parse_tracefile
-        lcov_info = Hash.new {|h, k| h[k] = {"coverage" => {}, "branches" => []} }
+        lcov_info = Hash.new {|h, k| h[k] = { "coverage" => {}, "branches" => [] } }
         source_file = nil
         File.readlines(@tracefile).each do |line|
           case line.chomp
