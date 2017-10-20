@@ -25,7 +25,7 @@ module Coveralls
       end
 
       def parse_tracefile
-        lcov_info = Hash.new {|h, k| h[k] = { "coverage" => {}, "branches" => [] } }
+        lcov_info = Hash.new {|h, k| h[k] = { "coverage" => {}, "branches" => {} } }
         source_file = nil
         File.readlines(@tracefile).each do |line|
           case line.chomp
@@ -34,7 +34,8 @@ module Coveralls
           when /\ADA:(\d+),(\d+)/
             line_no = $1.to_i
             count = $2.to_i
-            lcov_info[source_file]["coverage"][line_no] = count
+            coverage = lcov_info[source_file]["coverage"]
+            coverage[line_no] = (coverage[line_no] || 0) + count
           when /\ABRDA:(\d+),(\d+),(\d+),(\d+|-)/
             line_no = $1.to_i
             block_no = $2.to_i
@@ -43,7 +44,10 @@ module Coveralls
             unless $4 == "-"
               hits = $4.to_i
             end
-            lcov_info[source_file]['branches'].push(line_no, block_no, branch_no, hits)
+            branches = lcov_info[source_file]['branches']
+            branches_line = branches[line_no] = branches[line_no] || {}
+            branches_block = branches_line[block_no] = branches_line[block_no] || {}
+            branches_block[branch_no] = (branches_block[branch_no] || 0) + hits
           when /\Aend_of_record/
             source_file = nil
           end
@@ -69,7 +73,15 @@ module Coveralls
           coverage: coverage,
         }
         unless info["branches"].empty?
-          source_file["branches"] = info["branches"]
+          branches = []
+          info["branches"].each do |line_no, blocks_no|
+            blocks_no.each do |block_no, branches_no|
+              branches_no.each do |branch_no, hits|
+                branches.push(line_no, block_no, branch_no, hits)
+              end
+            end
+          end
+          source_file["branches"] = branches
         end
         source_file
       end
