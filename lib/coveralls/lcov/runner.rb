@@ -7,7 +7,6 @@ require "coveralls/lcov/converter"
 
 module Coveralls
   # URI: https://coveralls.io/api/v1/jobs
-  HOST = "coveralls.io"
   PATH = "/api/v1/jobs"
 
   module Lcov
@@ -22,6 +21,9 @@ module Coveralls
         @service_job_id = nil
         @verbose = false
         @dry_run = false
+        @host = "coveralls.io"
+        @port = 443
+        @use_ssl = true
         @parser = OptionParser.new(@argv)
         @parser.banner = <<BANNER
   Usage: coveralls-lcov [options] coverage.info
@@ -53,6 +55,15 @@ BANNER
         end
         @parser.on("-n", "--dry-run", "Dry run") do
           @dry_run = true
+        end
+        @parser.on("-h", "--host=HOST", "Host of Coveralls endpoint (default: coveralls.io)") do |host|
+          @host = host
+        end
+        @parser.on("-p", "--port=PORT", "Port of Coveralls endpoint (default: 443)") do |port|
+          @port = port
+        end
+        @parser.on("--[no-]ssl", "Use SSL for connecting (default)") do |use_ssl|
+          @use_ssl = use_ssl
         end
       end
 
@@ -88,8 +99,8 @@ BANNER
         Net::HTTP.version_1_2
         response = nil
 
-        http = Net::HTTP.new(HOST, 443)
-        http.use_ssl = true
+        http = Net::HTTP.new(@host, @port)
+        http.use_ssl = @use_ssl
         http.start do
           request = Net::HTTP::Post.new(PATH)
           request["content-type"] = "multipart/form-data; boundary=boundary"
