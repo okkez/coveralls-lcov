@@ -24,6 +24,7 @@ module Coveralls
         @host = "coveralls.io"
         @port = 443
         @use_ssl = true
+        @parallel = ENV["COVERALLS_PARALLEL"] == "true"
         @parser = OptionParser.new(@argv)
         @parser.banner = <<BANNER
   Usage: coveralls-lcov [options] coverage.info
@@ -83,6 +84,7 @@ BANNER
         elsif coveralls_config && coveralls_config["repo_token"]
           payload[:repo_token] = coveralls_config["repo_token"]
         end
+        payload[:parallel] = @parallel
         payload_json = payload.to_json
         puts payload_json if @verbose
         unless @dry_run
