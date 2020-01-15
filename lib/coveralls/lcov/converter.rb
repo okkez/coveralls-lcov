@@ -97,7 +97,7 @@ module Coveralls
             message: `git log -1 --format=%s`,
           },
           remotes: [], # FIXME need this?
-          branch: `git rev-parse --abbrev-ref HEAD`,
+          branch: ENV["TRAVIS_BRANCH"] || `git rev-parse --abbrev-ref HEAD`,
         }
       end
 
