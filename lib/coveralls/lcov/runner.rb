@@ -20,6 +20,7 @@ module Coveralls
         @service_name = "travis-ci"
         @service_job_id = nil
         @service_pull_request = nil
+        @flag_name = nil
         @verbose = false
         @dry_run = false
         @host = "coveralls.io"
@@ -44,6 +45,9 @@ BANNER
         end
         @parser.on("--service-pull-request=PULL_REQUEST", "Service pull request number. ex. TRAVIS_PULL_REQUEST") do |service_pull_request|
           @service_pull_request = service_pull_request
+        end
+        @parser.on("--flag-name=FLAG_NAME", "Flag name. ex. \"domain_layer\"") do |flag_name|
+          @flag_name = flag_name
         end
         @parser.on("--retry=N", Integer, "Retry to POST N times (default: 3)") do |n_times|
           @n_times = n_times
@@ -90,6 +94,9 @@ BANNER
         end
         if @service_pull_request
           payload[:service_pull_request] = @service_pull_request
+        end
+        if @flag_name
+          payload[:flag_name] = @flag_name
         end
         payload[:parallel] = @parallel
         payload_json = payload.to_json
