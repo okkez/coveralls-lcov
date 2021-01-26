@@ -79,6 +79,7 @@ Flag | Description
 `-t` `--repo-token=TOKEN` | The secret token for your repository, found at the bottom of your repository’s page on Coveralls.
 `-s` `--service_name=SERVICE` | The CI service or other environment in which the test suite was run. This can be anything, but certain services have special features (travis-ci, travis-pro, or coveralls-ruby).
 `--service-job-id=JOB_ID` | A unique identifier of the job on the service specified by service_name.
+`-b` `--branch=BRANCH` | The current Git branch to be reported to Coveralls (not needed for Travis or if `git rev-parse` properly reports the branch).
 `--service-pull-request=PULL_REQUEST` | The associated pull request ID of the build. Used for updating the status and/or commenting.
 `--flag-name=FLAG_NAME` | If this is set, the job being reported will be named in the view and have it’s own independent status reported to your VCS provider.
 `--retry=N` | Retries sending coverage data on failure to Coveralls N times (default: 3)
