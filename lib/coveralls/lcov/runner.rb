@@ -19,6 +19,7 @@ module Coveralls
         @source_encoding = Encoding::UTF_8
         @service_name = "travis-ci"
         @service_job_id = nil
+        @branch = nil
         @service_pull_request = nil
         @flag_name = nil
         @verbose = false
@@ -42,6 +43,9 @@ BANNER
         end
         @parser.on("--service-job-id=JOB_ID", "Service job id. ex. TRAVIS_JOB_ID") do |service_job_id|
           @service_job_id = service_job_id
+        end
+        @parser.on("-b", "--branch=BRANCH", "The current Git branch. ex. TRAVIS_BRANCH") do |branch|
+          @branch = branch
         end
         @parser.on("--service-pull-request=PULL_REQUEST", "Service pull request number. ex. TRAVIS_PULL_REQUEST") do |service_pull_request|
           @service_pull_request = service_pull_request
@@ -84,7 +88,7 @@ BANNER
           exit false
         end
         tracefile = @argv.shift
-        converter = Converter.new(tracefile, @source_encoding, @service_name, @service_job_id)
+        converter = Converter.new(tracefile, @source_encoding, @service_name, @service_job_id, @branch)
         payload = converter.convert
         coveralls_config = YAML.load_file(".coveralls.yml") if File.exist? ".coveralls.yml"
         if @repo_token
