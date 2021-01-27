@@ -86,7 +86,7 @@ Flag | Description
 `--delay=N` | Delays the next retry by N seconds (default: 3)
 `--source-encoding=ENCODING` | The encoding of the source file (default: UTF-8)
 `-v` `--verbose` | Prints debug information like the HTTP request payload.
-`-h` `--dry-run` | Converts coverage data and optionally prints coverage data in verbose mode, but does not send it to Coveralls.
+`-n` `--dry-run` | Converts coverage data and optionally prints coverage data in verbose mode, but does not send it to Coveralls.
 `-h` `--host=HOST` | Host of Coveralls endpoint (default: coveralls.io)
 `-p` `--port=PORT` | Post of Coveralls endpoint (default: 443)
 `--[no]ssl` | Use SSL for connecting to Coveralls (default)
