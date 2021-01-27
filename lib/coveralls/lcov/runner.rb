@@ -19,6 +19,9 @@ module Coveralls
         @source_encoding = Encoding::UTF_8
         @service_name = "travis-ci"
         @service_job_id = nil
+        @branch = nil
+        @service_pull_request = nil
+        @flag_name = nil
         @verbose = false
         @dry_run = false
         @host = "coveralls.io"
@@ -40,6 +43,15 @@ BANNER
         end
         @parser.on("--service-job-id=JOB_ID", "Service job id. ex. TRAVIS_JOB_ID") do |service_job_id|
           @service_job_id = service_job_id
+        end
+        @parser.on("-b", "--branch=BRANCH", "The current Git branch. ex. TRAVIS_BRANCH") do |branch|
+          @branch = branch
+        end
+        @parser.on("--service-pull-request=PULL_REQUEST", "Service pull request number. ex. TRAVIS_PULL_REQUEST") do |service_pull_request|
+          @service_pull_request = service_pull_request
+        end
+        @parser.on("--flag-name=FLAG_NAME", "Flag name. ex. \"domain_layer\"") do |flag_name|
+          @flag_name = flag_name
         end
         @parser.on("--retry=N", Integer, "Retry to POST N times (default: 3)") do |n_times|
           @n_times = n_times
@@ -76,13 +88,19 @@ BANNER
           exit false
         end
         tracefile = @argv.shift
-        converter = Converter.new(tracefile, @source_encoding, @service_name, @service_job_id)
+        converter = Converter.new(tracefile, @source_encoding, @service_name, @service_job_id, @branch)
         payload = converter.convert
         coveralls_config = YAML.load_file(".coveralls.yml") if File.exist? ".coveralls.yml"
         if @repo_token
           payload[:repo_token] = @repo_token
         elsif coveralls_config && coveralls_config["repo_token"]
           payload[:repo_token] = coveralls_config["repo_token"]
+        end
+        if @service_pull_request
+          payload[:service_pull_request] = @service_pull_request
+        end
+        if @flag_name
+          payload[:flag_name] = @flag_name
         end
         payload[:parallel] = @parallel
         payload_json = payload.to_json
